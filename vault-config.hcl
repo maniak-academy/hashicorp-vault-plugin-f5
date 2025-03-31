@@ -1,0 +1,1 @@
+plugin_directory = "/Users/smaniak/Documents/Projects/HashiCorp-Vault-f5-plugin/plugins" 
