@@ -13,6 +13,57 @@ This plugin enables HashiCorp Vault to:
 
 Instead of creating temporary user accounts on F5 BIG-IP systems, this plugin obtains and manages authentication tokens. Applications like Ansible, CI/CD pipelines, or other automation tools can request tokens from Vault when they need to interact with F5 devices.
 
+### Token Generation and Usage Flow
+
+```
++-------------+          +---------------+          +------------+          +---------+
+| Application |          | HashiCorp     |          | F5 Token   |          | F5      |
+|             |          | Vault         |          | Plugin     |          | BIG-IP  |
++------+------+          +-------+-------+          +-----+------+          +----+----+
+       |                         |                        |                      |
+       | Authenticate            |                        |                      |
+       +------------------------>|                        |                      |
+       |                         |                        |                      |
+       |<------------------------+                        |                      |
+       | Vault Token             |                        |                      |
+       |                         |                        |                      |
+       | Request F5 Token        |                        |                      |
+       +------------------------>|                        |                      |
+       |                         | Forward Request        |                      |
+       |                         +----------------------->|                      |
+       |                         |                        | Authenticate with    |
+       |                         |                        | stored credentials   |
+       |                         |                        +--------------------->|
+       |                         |                        |                      |
+       |                         |                        |<---------------------+
+       |                         |                        | Generate Token       |
+       |                         |                        |                      |
+       |                         |                        | Store token details  |
+       |                         |                        +---+                  |
+       |                         |                        |   |                  |
+       |                         |                        |<--+                  |
+       |                         |                        |                      |
+       |                         |<-----------------------+                      |
+       |                         | Return token details   |                      |
+       |                         |                        |                      |
+       |<------------------------+                        |                      |
+       | F5 token + metadata     |                        |                      |
+       |                         |                        |                      |
+       | API calls with F5 token |                        |                      |
+       +-------------------------------------------------------------->|        |
+       |                         |                        |            |        |
+       |<--------------------------------------------------------------+        |
+       | API responses           |                        |                      |
+       |                         |                        |                      |
+       |                         |                        | Periodic cleanup     |
+       |                         |                        | of expired tokens    |
+       |                         |                        +---+                  |
+       |                         |                        |   |                  |
+       |                         |                        |<--+                  |
+       |                         |                        |                      |
++------+------+          +-------+-------+          +-----+------+          +----+----+
+```
+
 ## Features
 
 - **Secure Credential Storage**: Admin credentials are securely stored in Vault
