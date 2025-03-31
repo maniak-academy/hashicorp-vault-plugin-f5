@@ -185,6 +185,8 @@ This shows all currently active tokens across all F5 BIG-IP connections, includi
 
 You can also manage connections and generate tokens through the Vault UI:
 
+![F5 BIG-IP Token Plugin in Vault UI](screenshot.png)
+
 1. **Configure Connections**:
    - Navigate to `f5token/config/connection/YOUR_CONNECTION_NAME`
    - Click "Create"
@@ -287,6 +289,12 @@ This script:
 4. Generates tokens with default and custom TTLs
 5. Lists active tokens
 
+For an interactive demo with explanations of each step:
+
+```bash
+./demo_minimal.sh
+```
+
 ## Setting Up UI Access
 
 To ensure full access to the plugin in the Vault UI:
@@ -338,6 +346,3 @@ See [GIT_INSTRUCTIONS.md](GIT_INSTRUCTIONS.md) for detailed Git workflow instruc
 
 This plugin is licensed under the MIT License.
 
-## Demo
-
-![F5 Token Plugin Demo](path/to/demo.gif)
