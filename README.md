@@ -64,6 +64,10 @@ Instead of creating temporary user accounts on F5 BIG-IP systems, this plugin ob
 +------+------+          +-------+-------+          +-----+------+          +----+----+
 ```
 
+### Demo
+
+![F5 BIG-IP Token Plugin Demo](f5pluginvault.gif)
+
 ## Features
 
 - **Secure Credential Storage**: Admin credentials are securely stored in Vault
@@ -333,3 +337,7 @@ See [GIT_INSTRUCTIONS.md](GIT_INSTRUCTIONS.md) for detailed Git workflow instruc
 ## License
 
 This plugin is licensed under the MIT License.
+
+## Demo
+
+![F5 Token Plugin Demo](path/to/demo.gif)

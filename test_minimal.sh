@@ -47,3 +47,5 @@ EOF
 
 # Create a token with this policy
 vault token create -policy=f5token-admin 
+
+presenterm f5-plugin-demo.md 
