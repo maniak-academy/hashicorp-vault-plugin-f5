@@ -95,6 +95,81 @@ Using API tokens instead of temporary user accounts provides several advantages:
 - HashiCorp Vault (v1.4.0+)
 - Go 1.19+ (for building)
 - F5 BIG-IP device(s) with API access
+- Docker (for running Vault with plugin support)
+
+### Deploying Vault in Dev Mode
+
+For development and testing purposes, you can run Vault in dev mode using Docker. Here's how:
+
+```bash
+# Pull the latest Vault image
+docker pull hashicorp/vault:latest
+
+# Run Vault in dev mode
+docker run --name vault-dev \
+  -d \
+  -p 8200:8200 \
+  -e VAULT_DEV_ROOT_TOKEN_ID=root \
+  -e VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200 \
+  hashicorp/vault:latest
+
+# Verify Vault is running
+docker ps | grep vault-dev
+
+# Check Vault status
+docker exec vault-dev vault status
+```
+
+The dev mode server:
+- Runs in memory (no persistence)
+- Uses the root token 'root'
+- Is accessible at http://127.0.0.1:8200
+- Has all features enabled
+- Is suitable for development and testing
+
+To stop and remove the container:
+```bash
+docker stop vault-dev
+docker rm vault-dev
+```
+
+### Running Vault with Docker
+
+The plugin requires Vault to be running in Docker to ensure proper plugin compatibility. Here's how to set it up:
+
+```bash
+# Create a plugins directory
+mkdir -p plugins
+
+# Copy the plugin binary to the plugins directory
+cp vault-plugin-f5-token-linux plugins/
+
+# Start a Vault server in Docker with plugin support
+make docker-dev
+
+# This will:
+# 1. Run Vault in Docker
+# 2. Mount the current directory as /vault/plugins
+# 3. Set up the root token as 'root'
+# 4. Configure the plugin directory
+# 5. Expose Vault on http://127.0.0.1:8200
+
+# To stop and clean up the Docker container
+make docker-clean
+```
+
+Alternatively, you can run the Docker command directly:
+
+```bash
+docker run --name vault-dev -d -p 8200:8200 \
+    -v $(shell pwd):/vault/plugins \
+    -e VAULT_DEV_ROOT_TOKEN_ID=root \
+    -e "VAULT_LOCAL_CONFIG={\"plugin_directory\":\"/vault/plugins\"}" \
+    -e "VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200" \
+    hashicorp/vault:latest
+```
+
+After starting Vault in Docker, you can proceed with building and registering the plugin.
 
 ### Building the Plugin
 
@@ -130,7 +205,7 @@ vault secrets enable -path=f5token vault-plugin-f5-token-linux
 vault write f5token/config/connection/bigip1 \
   host="172.16.10.10" \
   username="admin" \
-  password="password" \
+  password=W3lcome098! \
   insecure_ssl=true
 ```
 
